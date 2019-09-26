@@ -51,7 +51,7 @@ steps:
   inputs:
     serverEndpoint: 'AppCenter'
     appSlug: '{APP_CENTER_SLUG}'
-    appFile: '$(build.artifactStagingDirectory)'
+    appFile: '{APP_FILE}'
     symbolsOption: 'Android'
     releaseNotesOption: 'input'
     releaseNotesInput: 'Here are the release notes for this version.'
