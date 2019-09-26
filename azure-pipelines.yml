@@ -17,8 +17,21 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/TEST-*.xml'
-    tasks: 'assembleDebug test'
-  displayName: gradlew assembleDebug test
+    tasks: 'assembleRelease test'
+  displayName: gradlew assembleRelease test
+
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: 'keystore.jks'
+    
+- task: AndroidSigning@3
+  inputs:
+    apkFiles: '**/*.apk'
+    apksign: true
+    apksignerKeystoreFile: 'keystore.jks'
+    apksignerKeystorePassword: '$(keystorePassword)'
+    apksignerKeystoreAlias: '$(keystoreAlias)'
+    apksignerKeyPassword: '$(keyPassword)'
 
 - task: CopyFiles@2
   inputs:
@@ -32,3 +45,14 @@ steps:
     artifactName: 'drop'
     artifactType: 'container'
   displayName: Publish artifacts
+
+# Distribute the app
+- task: AppCenterDistribute@3
+  inputs:
+    serverEndpoint: 'AppCenter'
+    appSlug: '$(APP_CENTER_SLUG)'
+    appFile: '$(APP_FILE)'
+    symbolsOption: 'Android'
+    releaseNotesOption: 'input'
+    releaseNotesInput: 'Here are the release notes for this version.'
+    destinationType: 'groups'
