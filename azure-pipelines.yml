@@ -20,6 +20,18 @@ steps:
     tasks: 'assembleRelease test'
   displayName: gradlew assembleRelease test
 
+- task: DownloadSecureFile@1
+  inputs:
+    secureFile: 'keystore.jks'
+    
+- task: AndroidSigning@3
+  inputs:
+    apkFiles: '**/*.apk'
+    apksignerKeystoreFile: 'keystore.jks'
+    apksignerKeystorePassword: '$(keystorePassword)'
+    apksignerKeystoreAlias: '$(keystoreAlias)'
+    apksignerKeyPassword: '$(keyPassword)'
+
 - task: CopyFiles@2
   inputs:
     contents: '**/*.apk'
